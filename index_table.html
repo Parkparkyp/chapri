@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>차량 판매금액 자동 계산기</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin: 6px 0 12px 0;
+      box-sizing: border-box;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    h2, h3 {
+      color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🚗 차량 판매금액 자동 계산기</h2>
+
+  <label>정상 차량금액 (만원)</label>
+  <input type="number" id="normalPrice" placeholder="예: 1800" oninput="calculate()" />
+
+  <label>다운 계약금액 (만원)</label>
+  <input type="number" id="downPrice" placeholder="예: 1730" oninput="calculate()" />
+
+  <label>성능비 (만원)</label>
+  <input type="number" id="performanceFee" value="56" oninput="calculate()" />
+
+  <table>
+    <thead>
+      <tr>
+        <th>구분</th>
+        <th>차량금액</th>
+        <th>이전비</th>
+        <th>매도비</th>
+        <th>성능비</th>
+        <th>총이전비</th>
+        <th>합계</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>정상계약</td>
+        <td id="n_price">-</td>
+        <td id="n_tax">-</td>
+        <td>44</td>
+        <td id="n_perf">-</td>
+        <td id="n_sum1">-</td>
+        <td id="n_total">-</td>
+      </tr>
+      <tr>
+        <td>다운계약</td>
+        <td id="d_price">-</td>
+        <td id="d_tax">-</td>
+        <td>44</td>
+        <td id="d_perf">-</td>
+        <td id="d_sum1">-</td>
+        <td id="d_total">-</td>
+      </tr>
+      <tr>
+        <td><strong>현금차액</strong></td>
+        <td colspan="5"></td>
+        <td id="gap"><strong>-</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    function calculate() {
+      const normal = parseFloat(document.getElementById('normalPrice').value);
+      const down = parseFloat(document.getElementById('downPrice').value);
+      const perf = parseFloat(document.getElementById('performanceFee').value);
+      const fee = 44;
+
+      if (!isNaN(normal) && !isNaN(down) && !isNaN(perf)) {
+        const normalTax = Math.ceil(normal * 0.085);
+        const normalTotal = normal + normalTax + fee + perf;
+
+        const downNet = down / 1.1;
+        const downTax = Math.ceil(downNet * 0.07);
+        const downTotal = down + downTax + fee + perf;
+
+        const cashGap = Math.ceil(normalTotal - downTotal);
+
+        // 정상계약
+        document.getElementById("n_price").innerText = normal;
+        document.getElementById("n_tax").innerText = normalTax;
+        document.getElementById("n_perf").innerText = perf;
+        document.getElementById("n_sum1").innerText = normalTax + fee + perf;
+        document.getElementById("n_total").innerText = normalTotal;
+
+        // 다운계약
+        document.getElementById("d_price").innerText = down;
+        document.getElementById("d_tax").innerText = downTax;
+        document.getElementById("d_perf").innerText = perf;
+        document.getElementById("d_sum1").innerText = downTax + fee + perf;
+        document.getElementById("d_total").innerText = downTotal;
+
+        // 차액
+        document.getElementById("gap").innerText = cashGap;
+      }
+    }
+  </script>
+
+</body>
+</html>
